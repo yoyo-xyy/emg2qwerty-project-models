@@ -1,0 +1,31 @@
+# @package _global_
+module:
+    _target_: emg2qwerty.lightning.TDSConvCTCModule
+    in_features: 528 # 2 * 16 * 33
+    mlp_features: [384]
+    block_channels: [32, 32, 32, 32]
+    kernel_width: 32 # Total temporal receptive field of 125 samples given 4 layers
+    hidden_size: 256 # 512
+    num_layers: 4
+    dropout: 0.1
+    # bidirectional: true
+
+    optimizer:
+        _target_: torch.optim.Adam
+        lr: 0.002
+    lr_scheduler:
+        scheduler:
+            _target_: pl_bolts.optimizers.lr_scheduler.LinearWarmupCosineAnnealingLR
+            warmup_epochs: 5
+            max_epochs: 50
+            warmup_start_lr: 1e-8
+            eta_min: 1e-7
+        interval: epoch
+        monitor: val/CER
+    decoder:
+        _target_: emg2qwerty.decoders.GreedyCTCDecoder
+
+datamodule:
+    _target_: emg2qwerty.lightning.WindowedEMGDataModule
+    window_length: 8000
+    padding: [1800, 200]

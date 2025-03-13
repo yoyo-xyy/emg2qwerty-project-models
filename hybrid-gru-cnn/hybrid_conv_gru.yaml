@@ -1,0 +1,27 @@
+# @package _global_
+module:
+    _target_: emg2qwerty.lightning.TDSConvCTCModule
+    in_features: 528 # (n_fft // 2 + 1) * 16 * 2
+    mlp_features: [512, 256] # Enhanced MLP for better feature extraction
+    block_channels: [32, 32, 32]
+    kernel_width: 32
+    conv_channels: [64, 64] # Two CNN layers
+    kernel_size: 5 # Moderate kernel size
+    gru_hidden_size: 512
+    gru_num_layers: 3
+    optimizer:
+        _target_: torch.optim.Adam
+        lr: 0.005
+    lr_scheduler:
+        scheduler:
+            _target_: torch.optim.lr_scheduler.StepLR
+            step_size: 30
+            gamma: 0.1
+        interval: epoch
+    decoder:
+        _target_: emg2qwerty.decoders.GreedyCTCDecoder
+
+datamodule:
+    _target_: emg2qwerty.lightning.WindowedEMGDataModule
+    window_length: 8000
+    padding: [1800, 200]
