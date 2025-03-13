@@ -1,6 +1,6 @@
 # EMG2QWERTY Project Models
 
-This repository contains the critical files for the C147/247 Final Project (Winter 2025, Professor Jonathan Kao) at UCLA. The project builds upon the `emg2qwerty` dataset and codebase from Meta, focusing on surface electromyography (sEMG) decoding for touch typing on a QWERTY keyboard. We implement and compare three models—Transformer, LSTM, and hybrid GRU-CNN—against the baseline, achieving improved character error rates (CER) for single-subject decoding.
+This repository contains the critical files for the C147/247 Final Project (Winter 2025, Professor Jonathan Kao) at UCLA. The project builds upon the `emg2qwerty` dataset and codebase from Meta, focusing on surface electromyography (sEMG) decoding for touch typing on a QWERTY keyboard. We implement and compare three models—LSTM, Hybrid GRU-CNN, and Transformer—against the baseline, achieving improved character error rates (CER) for single-subject decoding.
 
 ## Project Overview
 
