@@ -1,0 +1,31 @@
+# @package _global_
+module:
+    _target_: emg2qwerty.lightning.TDSConvCTCModule
+    in_features: 528 # 16 electrodes * 33 freq bins * 2 hands
+    mlp_features: [384] # Baseline MLP output
+    block_channels: [24, 24, 24] # For TDSConvEncoder, as in baseline
+    kernel_width: 32 # For TDSConvEncoder
+    nhead: 8
+    num_layers: 2
+    dim_feedforward: 512
+    dropout: 0.3
+    optimizer:
+        _target_: torch.optim.Adam
+        lr: 0.001
+        weight_decay: 1e-4 # Added
+    lr_scheduler:
+        scheduler:
+            _target_: pl_bolts.optimizers.lr_scheduler.LinearWarmupCosineAnnealingLR
+            warmup_epochs: 5
+            max_epochs: 50
+            warmup_start_lr: 1e-8
+            eta_min: 1e-7
+        interval: epoch
+        monitor: val/CER
+    decoder:
+        _target_: emg2qwerty.decoders.GreedyCTCDecoder
+
+datamodule:
+    _target_: emg2qwerty.lightning.WindowedEMGDataModule
+    window_length: 8000
+    padding: [1800, 200]
